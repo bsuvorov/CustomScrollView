@@ -8,6 +8,10 @@
 
 #import "CustomScrollView.h"
 
+@interface CustomScrollView ()
+@property CGRect startBounds;
+@end
+
 @implementation CustomScrollView
 
 - (id)initWithFrame:(CGRect)frame
@@ -40,21 +44,36 @@
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)panGestureRecognizer
 {
-    CGPoint translation = [panGestureRecognizer translationInView:self];
-    CGRect bounds = self.bounds;
-    
-    CGFloat newBoundsOriginX = bounds.origin.x - translation.x;
-    CGFloat minBoundsOriginX = 0.0;
-    CGFloat maxBoundsOriginX = self.contentSize.width - bounds.size.width;
-    bounds.origin.x = fmax(minBoundsOriginX, fmin(newBoundsOriginX, maxBoundsOriginX));
+    switch (panGestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan:
+        {
+            self.startBounds = self.bounds;
+        }
+        case UIGestureRecognizerStateEnded:
+        {
 
-    CGFloat newBoundsOriginY = bounds.origin.y - translation.y;
-    CGFloat minBoundsOriginY = 0.0;
-    CGFloat maxBoundsOriginY = self.contentSize.height - bounds.size.height;
-    bounds.origin.y = fmax(minBoundsOriginY, fmin(newBoundsOriginY, maxBoundsOriginY));
+        }
+        case UIGestureRecognizerStateChanged:
+        {
+            CGPoint translation = [panGestureRecognizer translationInView:self];
+            CGRect bounds = self.startBounds;
 
-    self.bounds = bounds;
-    [panGestureRecognizer setTranslation:CGPointZero inView:self];
+            CGFloat newBoundsOriginX = bounds.origin.x - translation.x;
+            CGFloat minBoundsOriginX = 0.0;
+            CGFloat maxBoundsOriginX = self.contentSize.width - bounds.size.width;
+            bounds.origin.x = fmax(minBoundsOriginX, fmin(newBoundsOriginX, maxBoundsOriginX));
+
+            CGFloat newBoundsOriginY = bounds.origin.y - translation.y;
+            CGFloat minBoundsOriginY = 0.0;
+            CGFloat maxBoundsOriginY = self.contentSize.height - bounds.size.height;
+            bounds.origin.y = fmax(minBoundsOriginY, fmin(newBoundsOriginY, maxBoundsOriginY));
+
+            self.bounds = bounds;
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 @end
