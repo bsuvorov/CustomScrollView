@@ -49,10 +49,6 @@
         {
             self.startBounds = self.bounds;
         }
-        case UIGestureRecognizerStateEnded:
-        {
-
-        }
         case UIGestureRecognizerStateChanged:
         {
             CGPoint translation = [panGestureRecognizer translationInView:self];
@@ -69,6 +65,11 @@
             bounds.origin.y = fmax(minBoundsOriginY, fmin(newBoundsOriginY, maxBoundsOriginY));
 
             self.bounds = bounds;
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+        {
+
         }
             break;
         default:
