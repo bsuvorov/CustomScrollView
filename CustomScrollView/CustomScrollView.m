@@ -9,8 +9,20 @@
 #import "CustomScrollView.h"
 #import <POP.h>
 
+typedef NS_ENUM(NSInteger, ScrollViewPanState) {
+    ScrollViewPanStateInactive,
+    ScrollViewPanStateScrollsDown,
+    ScrollViewPanStateScrollsUp,
+    ScrollViewPanStateContentPansDown,
+    ScrollViewPanStateContentPansUp,
+    
+};
+
 @interface CustomScrollView ()
 @property CGRect startBounds;
+@property (nonatomic) ScrollViewPanState panState;
+
+@property (nonatomic) BOOL isDraggingSuperview;
 @end
 
 @implementation CustomScrollView
@@ -41,6 +53,7 @@
 {
     self.scrollHorizontal = YES;
     self.scrollVertical = YES;
+    self.backgroundColor = [UIColor lightGrayColor];
 
     UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     [self addGestureRecognizer:panGestureRecognizer];
@@ -68,6 +81,22 @@
     return prop;
 }
 
+- (void)moveContentViewFrameWithTranslation:(CGPoint)translation
+{
+    CGRect frame = self.superview.frame;
+    frame.origin.y += translation.y;
+    frame.size.height -= translation.y;
+    self.superview.frame = frame;
+}
+
+- (void)scrollViewWithTranslation:(CGPoint)translation
+{
+    CGRect bounds = self.bounds;
+    bounds.origin.y -= translation.y;
+    self.bounds = bounds;
+    
+}
+
 - (void)handlePanGesture:(UIPanGestureRecognizer *)panGestureRecognizer
 {
     switch (panGestureRecognizer.state) {
@@ -81,65 +110,118 @@
         case UIGestureRecognizerStateChanged:
         {
             CGPoint translation = [panGestureRecognizer translationInView:self];
-            CGRect bounds = self.startBounds;
+            // Reset the translation of the recognizer.
+            [panGestureRecognizer setTranslation:CGPointZero inView:self];
+            NSLog(@"Translation = %f", translation.y);
+            if (self.panState == ScrollViewPanStateInactive) {
+                NSLog(@"state Inactive");
 
-            if (!self.scrollHorizontal) {
-                translation.x = 0.0;
+                if (translation.y <= 0) {
+                    self.panState = ScrollViewPanStateScrollsDown;
+                    [self scrollViewWithTranslation:translation];
+                } else {
+                    if (self.bounds.origin.y <= 0) {
+                        self.panState = ScrollViewPanStateContentPansDown;
+                        [self moveContentViewFrameWithTranslation:translation];
+                    } else {
+                        self.panState = ScrollViewPanStateScrollsUp;
+                        [self scrollViewWithTranslation:translation];
+                    }
+                }
+            } else if (self.panState == ScrollViewPanStateScrollsDown) {
+                NSLog(@"state ScrollViewPanStateScrollsDown");
+                if (translation.y <= 0) {
+                    [self scrollViewWithTranslation:translation];
+                } else {
+                    self.panState = ScrollViewPanStateScrollsUp;
+                    [self scrollViewWithTranslation:translation];
+                }
+            } else if (self.panState == ScrollViewPanStateScrollsUp) {
+                if (translation.y <= 0) {
+                    self.panState = ScrollViewPanStateScrollsDown;
+                    [self scrollViewWithTranslation:translation];
+                } else {
+                    if(self.bounds.origin.y - translation.y < 0) {
+                        self.panState = ScrollViewPanStateContentPansDown;
+                        [self moveContentViewFrameWithTranslation:translation];
+                    } else {
+                        self.panState = ScrollViewPanStateScrollsUp;
+                        CGRect bounds = self.bounds;
+                        bounds.origin.y -= translation.y;
+                        self.bounds = bounds;
+                    }
+                }
             }
-            if (!self.scrollVertical) {
-                translation.y = 0.0;
+            else if (self.panState == ScrollViewPanStateContentPansDown) {
+                NSLog(@"state ScrollViewPanStateContentPansDown");
+                
+                if (translation.y < 0) {
+                    self.panState = ScrollViewPanStateContentPansUp;
+                    [self moveContentViewFrameWithTranslation:translation];
+                } else {
+                    [self moveContentViewFrameWithTranslation:translation];
+                }
+            } else if (self.panState == ScrollViewPanStateContentPansUp) {
+                if (translation.y < 0) {
+                    CGRect frame = self.superview.frame;
+                    frame.origin.y += translation.y;
+                    frame.size.height -= translation.y;
+                    if (frame.origin.y < 0) {
+                        frame.size.height -= frame.origin.y;
+                        frame.origin.y = 0;
+                        self.panState = ScrollViewPanStateScrollsUp;
+                    }
+                    self.superview.frame = frame;
+                } else {
+                    self.panState = ScrollViewPanStateContentPansDown;
+                    [self moveContentViewFrameWithTranslation:translation];
+                }
             }
-
-            CGFloat newBoundsOriginX = bounds.origin.x - translation.x;
-            CGFloat minBoundsOriginX = 0.0;
-            CGFloat maxBoundsOriginX = self.contentSize.width - bounds.size.width;
-            CGFloat constrainedBoundsOriginX = fmax(minBoundsOriginX, fmin(newBoundsOriginX, maxBoundsOriginX));
-            bounds.origin.x = constrainedBoundsOriginX + (newBoundsOriginX - constrainedBoundsOriginX) / 2;
-
-            CGFloat newBoundsOriginY = bounds.origin.y - translation.y;
-            CGFloat minBoundsOriginY = 0.0;
-            CGFloat maxBoundsOriginY = self.contentSize.height - bounds.size.height;
-            CGFloat constrainedBoundsOriginY = fmax(minBoundsOriginY, fmin(newBoundsOriginY, maxBoundsOriginY));
-            bounds.origin.y = constrainedBoundsOriginY + (newBoundsOriginY - constrainedBoundsOriginY) / 2;
-
-            self.bounds = bounds;
         }
+
             break;
         case UIGestureRecognizerStateEnded:
         {
-            CGPoint velocity = [panGestureRecognizer velocityInView:self];
-
-            if (!self.scrollHorizontal) {
-                velocity.x = 0.0;
+            self.panState = ScrollViewPanStateInactive;
+            if (self.bounds.origin.y != 0) {
+                CGPoint velocity = [panGestureRecognizer velocityInView:self];
+                
+                if (!self.scrollHorizontal) {
+                    velocity.x = 0.0;
+                }
+                if (!self.scrollVertical) {
+                    velocity.y = 0.0;
+                }
+                
+                velocity.x = -velocity.x;
+                velocity.y = -velocity.y;
+//            NSLog(@"decelerating with velocity: %@", NSStringFromCGPoint(velocity));
+                
+                POPDecayAnimation *decayAnimation = [POPDecayAnimation animation];
+                decayAnimation.property = [self boundsOriginProperty];
+                decayAnimation.velocity = [NSValue valueWithCGPoint:velocity];
+                [self pop_addAnimation:decayAnimation forKey:@"decelerate"];
             }
-            if (!self.scrollVertical) {
-                velocity.y = 0.0;
-            }
-
-            velocity.x = -velocity.x;
-            velocity.y = -velocity.y;
-            NSLog(@"decelerating with velocity: %@", NSStringFromCGPoint(velocity));
-
-            POPDecayAnimation *decayAnimation = [POPDecayAnimation animation];
-            decayAnimation.property = [self boundsOriginProperty];
-            decayAnimation.velocity = [NSValue valueWithCGPoint:velocity];
-            [self pop_addAnimation:decayAnimation forKey:@"decelerate"];
         }
             break;
 
         default:
             break;
     }
-
+    
 }
 
 - (void)setBounds:(CGRect)bounds
 {
     [super setBounds:bounds];
 
+    
+
     BOOL outsideBoundsMinimum = bounds.origin.x < 0.0 || bounds.origin.y < 0.0;
     BOOL outsideBoundsMaximum = bounds.origin.x > self.contentSize.width - bounds.size.width || bounds.origin.y > self.contentSize.height - bounds.size.height;
 
+    NSLog(@"bounds.origin.y = %f, contentSize.height = %f, bounds.size.height = %f", bounds.origin.y, self.contentSize.height, bounds.size.height);
+    
     if (outsideBoundsMaximum || outsideBoundsMinimum) {
         POPDecayAnimation *decayAnimation = [self pop_animationForKey:@"decelerate"];
         if (decayAnimation) {

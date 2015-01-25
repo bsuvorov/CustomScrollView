@@ -21,10 +21,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    CGRect frame = self.view.bounds;
+    frame.size.height -= 40;
+    frame.origin.y += 40;
     
-    self.customScrollView = [[CustomScrollView alloc] initWithFrame:self.view.bounds];
+    UIView *borisView = [[UIView alloc] init];
+    borisView.backgroundColor = [UIColor blackColor];
+    borisView.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
+   
+    [self.view addSubview:borisView];
+    
+    self.customScrollView = [[CustomScrollView alloc] initWithFrame:frame];
     self.customScrollView.contentSize = CGSizeMake(self.view.bounds.size.width, 1000);
     self.customScrollView.scrollHorizontal = NO;
+    self.customScrollView.clipsToBounds = YES;
     
     UIView *redView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 100, 100)];
     UIView *greenView = [[UIView alloc] initWithFrame:CGRectMake(150, 160, 150, 200)];
