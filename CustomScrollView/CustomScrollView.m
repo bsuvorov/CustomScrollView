@@ -97,6 +97,85 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     
 }
 
+- (void)changeUIForNewState:(ScrollViewPanState)newState oldState:(ScrollViewPanState)oldState translation:(CGPoint)translation
+{
+    if (oldState == ScrollViewPanStateInactive) {
+        if (newState == ScrollViewPanStateScrollsDown || newState == ScrollViewPanStateScrollsUp) {
+            [self scrollViewWithTranslation:translation];
+        } else if (newState == ScrollViewPanStateContentPansDown){
+            [self moveContentViewFrameWithTranslation:translation];
+        }
+    } else if (oldState == ScrollViewPanStateScrollsDown) {
+        [self scrollViewWithTranslation:translation];
+    } else if (oldState == ScrollViewPanStateScrollsUp) {
+        if (newState == ScrollViewPanStateContentPansDown) {
+            [self moveContentViewFrameWithTranslation:translation];
+        } else {
+            [self scrollViewWithTranslation:translation];
+        }
+    } else if (oldState == ScrollViewPanStateContentPansDown) {
+        [self moveContentViewFrameWithTranslation:translation];
+
+    } else if (oldState == ScrollViewPanStateContentPansUp) {
+        if (newState == ScrollViewPanStateContentPansUp) {
+            [self moveContentViewFrameWithTranslation:translation];
+        } else if (newState == ScrollViewPanStateScrollsUp) {
+            CGRect frame = self.superview.frame;
+            frame.size.height -= frame.origin.y;
+            frame.origin.y = 0;
+            self.superview.frame = frame;
+        } else if (newState == ScrollViewPanStateScrollsDown) {
+            [self moveContentViewFrameWithTranslation:translation];
+        }
+    }
+}
+
+- (ScrollViewPanState)nextStateForState:(ScrollViewPanState)oldState translation:(CGPoint)translation
+{
+    if (oldState == ScrollViewPanStateInactive) {
+        if (translation.y <= 0) {
+            return ScrollViewPanStateScrollsDown;
+        } else if (self.bounds.origin.y <= 0) {
+            return ScrollViewPanStateContentPansDown;
+        } else {
+            return ScrollViewPanStateScrollsUp;
+        }
+    } else if (oldState == ScrollViewPanStateScrollsDown) {
+        if (translation.y <= 0) {
+            return ScrollViewPanStateScrollsDown;
+        } else {
+            return ScrollViewPanStateScrollsUp;
+        }
+    } else if (oldState == ScrollViewPanStateScrollsUp) {
+        if (translation.y <= 0) {
+            return ScrollViewPanStateScrollsDown;
+        } else if(self.bounds.origin.y - translation.y < 0) {
+            return ScrollViewPanStateContentPansDown;
+        } else {
+            return ScrollViewPanStateScrollsUp;
+        }
+    } else if (oldState == ScrollViewPanStateContentPansDown) {
+        if (translation.y < 0) {
+            return ScrollViewPanStateContentPansUp;
+        } else {
+            return ScrollViewPanStateContentPansDown;
+        }
+    } else if (oldState == ScrollViewPanStateContentPansUp) {
+        if (translation.y < 0) {
+            CGRect frame = self.superview.frame;
+            if (frame.origin.y + translation.y < 0) {
+                return ScrollViewPanStateScrollsUp;
+            } else {
+                return ScrollViewPanStateContentPansUp;
+            }
+        } else {
+            return ScrollViewPanStateContentPansDown;
+        }
+    }
+
+    return ScrollViewPanStateInactive;
+}
+
 - (void)handlePanGesture:(UIPanGestureRecognizer *)panGestureRecognizer
 {
     switch (panGestureRecognizer.state) {
@@ -110,73 +189,13 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
         case UIGestureRecognizerStateChanged:
         {
             CGPoint translation = [panGestureRecognizer translationInView:self];
+
             // Reset the translation of the recognizer.
             [panGestureRecognizer setTranslation:CGPointZero inView:self];
-            NSLog(@"Translation = %f", translation.y);
-            if (self.panState == ScrollViewPanStateInactive) {
-                NSLog(@"state Inactive");
-
-                if (translation.y <= 0) {
-                    self.panState = ScrollViewPanStateScrollsDown;
-                    [self scrollViewWithTranslation:translation];
-                } else {
-                    if (self.bounds.origin.y <= 0) {
-                        self.panState = ScrollViewPanStateContentPansDown;
-                        [self moveContentViewFrameWithTranslation:translation];
-                    } else {
-                        self.panState = ScrollViewPanStateScrollsUp;
-                        [self scrollViewWithTranslation:translation];
-                    }
-                }
-            } else if (self.panState == ScrollViewPanStateScrollsDown) {
-                NSLog(@"state ScrollViewPanStateScrollsDown");
-                if (translation.y <= 0) {
-                    [self scrollViewWithTranslation:translation];
-                } else {
-                    self.panState = ScrollViewPanStateScrollsUp;
-                    [self scrollViewWithTranslation:translation];
-                }
-            } else if (self.panState == ScrollViewPanStateScrollsUp) {
-                if (translation.y <= 0) {
-                    self.panState = ScrollViewPanStateScrollsDown;
-                    [self scrollViewWithTranslation:translation];
-                } else {
-                    if(self.bounds.origin.y - translation.y < 0) {
-                        self.panState = ScrollViewPanStateContentPansDown;
-                        [self moveContentViewFrameWithTranslation:translation];
-                    } else {
-                        self.panState = ScrollViewPanStateScrollsUp;
-                        CGRect bounds = self.bounds;
-                        bounds.origin.y -= translation.y;
-                        self.bounds = bounds;
-                    }
-                }
-            }
-            else if (self.panState == ScrollViewPanStateContentPansDown) {
-                NSLog(@"state ScrollViewPanStateContentPansDown");
-                
-                if (translation.y < 0) {
-                    self.panState = ScrollViewPanStateContentPansUp;
-                    [self moveContentViewFrameWithTranslation:translation];
-                } else {
-                    [self moveContentViewFrameWithTranslation:translation];
-                }
-            } else if (self.panState == ScrollViewPanStateContentPansUp) {
-                if (translation.y < 0) {
-                    CGRect frame = self.superview.frame;
-                    frame.origin.y += translation.y;
-                    frame.size.height -= translation.y;
-                    if (frame.origin.y < 0) {
-                        frame.size.height -= frame.origin.y;
-                        frame.origin.y = 0;
-                        self.panState = ScrollViewPanStateScrollsUp;
-                    }
-                    self.superview.frame = frame;
-                } else {
-                    self.panState = ScrollViewPanStateContentPansDown;
-                    [self moveContentViewFrameWithTranslation:translation];
-                }
-            }
+            
+            ScrollViewPanState newState = [self nextStateForState:self.panState translation:translation];
+            [self changeUIForNewState:newState oldState:self.panState translation:translation];
+            self.panState = newState;
         }
 
             break;
@@ -220,7 +239,7 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     BOOL outsideBoundsMinimum = bounds.origin.x < 0.0 || bounds.origin.y < 0.0;
     BOOL outsideBoundsMaximum = bounds.origin.x > self.contentSize.width - bounds.size.width || bounds.origin.y > self.contentSize.height - bounds.size.height;
 
-    NSLog(@"bounds.origin.y = %f, contentSize.height = %f, bounds.size.height = %f", bounds.origin.y, self.contentSize.height, bounds.size.height);
+//    NSLog(@"bounds.origin.y = %f, contentSize.height = %f, bounds.size.height = %f", bounds.origin.y, self.contentSize.height, bounds.size.height);
     
     if (outsideBoundsMaximum || outsideBoundsMinimum) {
         POPDecayAnimation *decayAnimation = [self pop_animationForKey:@"decelerate"];
