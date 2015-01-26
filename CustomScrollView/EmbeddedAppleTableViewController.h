@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AppleTableViewController : UIViewController
+@interface EmbeddedAppleTableViewController : UIViewController
 
 @end

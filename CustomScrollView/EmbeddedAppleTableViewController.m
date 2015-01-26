@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Ole Begemann. All rights reserved.
 //
 
-#import "AppleTableViewController.h"
+#import "EmbeddedAppleTableViewController.h"
 #import <POP.h>
 
 typedef NS_ENUM(NSInteger, ScrollViewPanState) {
@@ -18,14 +18,14 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     
 };
 
-@interface AppleTableViewController () <UITableViewDataSource>
+@interface EmbeddedAppleTableViewController () <UITableViewDataSource>
 @property (nonatomic) ScrollViewPanState panState;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) UIPanGestureRecognizer *panGesture;
 @property (nonatomic) NSArray *data;
 @end
 
-@implementation AppleTableViewController
+@implementation EmbeddedAppleTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

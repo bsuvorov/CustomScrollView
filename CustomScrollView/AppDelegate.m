@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
-#import "AppleTableViewController.h"
+#import "EmbeddedAppleTableViewController.h"
 
 @implementation AppDelegate
 
@@ -17,7 +17,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor purpleColor];
     
-    ViewController *viewController = [[AppleTableViewController alloc] init];
+    ViewController *viewController = [[EmbeddedAppleTableViewController alloc] init];
 //        ViewController *viewController = [[ViewController alloc] init];
     self.window.rootViewController = viewController;
 
