@@ -1,5 +1,6 @@
 # CustomScrollView
 
-A very simple implementation of a scroll view on iOS. Not meant for production (use `UIScrollView` instead), just for learning purposes. Please check out my [accompanying blog post](http://oleb.net/blog/2014/04/understanding-uiscrollview/) for more information.
+3 different implementations of scrolling a view and dismissing it with dragging down (or up, depending on direction).
+Demo video can be seen here: https://cloud.box.com/s/rzj8yc7kdgmxeei94y7135nnssfgca78
+Code started as a fork of a fork on Ole Behemann CustomScrollView.
 
-Written by [Ole Begemann](http://oleb.net), April 2014.
