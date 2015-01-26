@@ -44,7 +44,7 @@
 {
     Class genericClass = [self.sampleClassNames objectAtIndex:indexPath.row];
     UIViewController *vc = (UIViewController *)[[genericClass alloc] init];
-    [self presentViewController:vc animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

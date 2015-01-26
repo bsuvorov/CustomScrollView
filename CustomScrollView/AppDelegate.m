@@ -16,9 +16,11 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor purpleColor];
     
-    SampleSelectorTableViewController *viewController = [[SampleSelectorTableViewController alloc] init];
 
-    self.window.rootViewController = viewController;
+    SampleSelectorTableViewController *viewController = [[SampleSelectorTableViewController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+
+    self.window.rootViewController = navController;
 
     [self.window makeKeyAndVisible];
     return YES;

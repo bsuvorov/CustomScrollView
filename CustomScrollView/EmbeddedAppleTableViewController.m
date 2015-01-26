@@ -215,7 +215,7 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
             }
             
             if (self.view.frame.origin.y > kYOffsetToTriggerDismissal) {
-                [self dismissViewControllerAnimated:YES completion:nil];
+                [self dismissVC];
             } else if (self.view.frame.origin.y > 0) {
                 [self pop_removeAllAnimations];
                 
@@ -283,6 +283,11 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     }];
     
     return prop;
+}
+
+- (void)dismissVC
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)setTableViewBounds:(CGRect)bounds
