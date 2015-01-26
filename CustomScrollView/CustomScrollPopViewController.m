@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 Ole Begemann. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "CustomScrollPopViewController.h"
 #import "CustomScrollView.h"
 
-@interface ViewController ()
+@interface CustomScrollPopViewController ()
 
 @property (nonatomic) CustomScrollView *customScrollView;
 
 @end
 
 
-@implementation ViewController
+@implementation CustomScrollPopViewController
 
 - (void)viewDidLoad
 {

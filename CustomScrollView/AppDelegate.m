@@ -7,8 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
-#import "EmbeddedAppleTableViewController.h"
+#import "SampleSelectorTableViewController.h"
 
 @implementation AppDelegate
 
@@ -17,8 +16,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor purpleColor];
     
-    ViewController *viewController = [[EmbeddedAppleTableViewController alloc] init];
-//        ViewController *viewController = [[ViewController alloc] init];
+    SampleSelectorTableViewController *viewController = [[SampleSelectorTableViewController alloc] init];
+
     self.window.rootViewController = viewController;
 
     [self.window makeKeyAndVisible];

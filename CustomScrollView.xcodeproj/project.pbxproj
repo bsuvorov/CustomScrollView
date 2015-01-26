@@ -14,7 +14,7 @@
 		5D3A783218FF1912006CCAB3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5D3A783018FF1912006CCAB3 /* InfoPlist.strings */; };
 		5D3A783418FF1912006CCAB3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D3A783318FF1912006CCAB3 /* main.m */; };
 		5D3A783818FF1912006CCAB3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D3A783718FF1912006CCAB3 /* AppDelegate.m */; };
-		5D3A783E18FF1912006CCAB3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D3A783D18FF1912006CCAB3 /* ViewController.m */; };
+		5D3A783E18FF1912006CCAB3 /* CustomScrollPopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D3A783D18FF1912006CCAB3 /* CustomScrollPopViewController.m */; };
 		5D3A784018FF1912006CCAB3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D3A783F18FF1912006CCAB3 /* Images.xcassets */; };
 		5D3A784718FF1912006CCAB3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D3A784618FF1912006CCAB3 /* XCTest.framework */; };
 		5D3A784818FF1912006CCAB3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D3A782718FF1912006CCAB3 /* Foundation.framework */; };
@@ -24,6 +24,7 @@
 		5D3A785E18FF1923006CCAB3 /* CustomScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D3A785D18FF1923006CCAB3 /* CustomScrollView.m */; };
 		708C79D31A7344B6001409DE /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 708C79D21A7344B6001409DE /* ContainerViewController.m */; };
 		70D673571A74AE16008799A2 /* EmbeddedAppleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D673561A74AE16008799A2 /* EmbeddedAppleTableViewController.m */; };
+		70DE37B41A75E6C7001DCD2F /* SampleSelectorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70DE37B31A75E6C7001DCD2F /* SampleSelectorTableViewController.m */; };
 		F981C00E1914449600EF08E0 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = F981C00D1914449600EF08E0 /* Podfile */; };
 /* End PBXBuildFile section */
 
@@ -50,8 +51,8 @@
 		5D3A783518FF1912006CCAB3 /* CustomScrollView-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CustomScrollView-Prefix.pch"; sourceTree = "<group>"; };
 		5D3A783618FF1912006CCAB3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5D3A783718FF1912006CCAB3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		5D3A783C18FF1912006CCAB3 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		5D3A783D18FF1912006CCAB3 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		5D3A783C18FF1912006CCAB3 /* CustomScrollPopViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomScrollPopViewController.h; sourceTree = "<group>"; };
+		5D3A783D18FF1912006CCAB3 /* CustomScrollPopViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomScrollPopViewController.m; sourceTree = "<group>"; };
 		5D3A783F18FF1912006CCAB3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5D3A784518FF1912006CCAB3 /* CustomScrollViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CustomScrollViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D3A784618FF1912006CCAB3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -64,6 +65,8 @@
 		708C79D21A7344B6001409DE /* ContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
 		70D673551A74AE16008799A2 /* EmbeddedAppleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmbeddedAppleTableViewController.h; sourceTree = "<group>"; };
 		70D673561A74AE16008799A2 /* EmbeddedAppleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmbeddedAppleTableViewController.m; sourceTree = "<group>"; };
+		70DE37B21A75E6C7001DCD2F /* SampleSelectorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleSelectorTableViewController.h; sourceTree = "<group>"; };
+		70DE37B31A75E6C7001DCD2F /* SampleSelectorTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleSelectorTableViewController.m; sourceTree = "<group>"; };
 		CD3C33B803EAB8E8D71691F2 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F981C00D1914449600EF08E0 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
@@ -138,10 +141,12 @@
 		5D3A782D18FF1912006CCAB3 /* CustomScrollView */ = {
 			isa = PBXGroup;
 			children = (
+				70DE37B21A75E6C7001DCD2F /* SampleSelectorTableViewController.h */,
+				70DE37B31A75E6C7001DCD2F /* SampleSelectorTableViewController.m */,
 				5D3A783618FF1912006CCAB3 /* AppDelegate.h */,
 				5D3A783718FF1912006CCAB3 /* AppDelegate.m */,
-				5D3A783C18FF1912006CCAB3 /* ViewController.h */,
-				5D3A783D18FF1912006CCAB3 /* ViewController.m */,
+				5D3A783C18FF1912006CCAB3 /* CustomScrollPopViewController.h */,
+				5D3A783D18FF1912006CCAB3 /* CustomScrollPopViewController.m */,
 				5D3A785C18FF1923006CCAB3 /* CustomScrollView.h */,
 				5D3A785D18FF1923006CCAB3 /* CustomScrollView.m */,
 				70D673551A74AE16008799A2 /* EmbeddedAppleTableViewController.h */,
@@ -318,7 +323,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D3A783E18FF1912006CCAB3 /* ViewController.m in Sources */,
+				5D3A783E18FF1912006CCAB3 /* CustomScrollPopViewController.m in Sources */,
+				70DE37B41A75E6C7001DCD2F /* SampleSelectorTableViewController.m in Sources */,
 				5D3A783818FF1912006CCAB3 /* AppDelegate.m in Sources */,
 				70D673571A74AE16008799A2 /* EmbeddedAppleTableViewController.m in Sources */,
 				5D3A785E18FF1923006CCAB3 /* CustomScrollView.m in Sources */,
