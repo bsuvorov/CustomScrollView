@@ -71,14 +71,8 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 {
     [super viewDidLayoutSubviews];
     self.tableView.frame = self.view.bounds;
-    
-//    self.tableView.contentSize = self.view.bounds.size;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 - (void)moveContentViewFrameWithTranslation:(CGPoint)translation
 {
@@ -181,7 +175,7 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
         case UIGestureRecognizerStateBegan:
         {
             NSLog(@"Gesture started!");
-            [self.view pop_removeAnimationForKey:@"bounce"];
+            [self pop_removeAnimationForKey:@"bounce"];
             [self pop_removeAnimationForKey:@"decelerate"];
         }
             
