@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     
 };
 
+#define kYOffsetToTriggerDismissal 40
+
 @interface EmbeddedAppleTableViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic) ScrollViewPanState panState;
 @property (nonatomic) UITableView *tableView;
@@ -211,6 +213,23 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
                 decayAnimation.velocity = [NSValue valueWithCGPoint:velocity];
                 [self pop_addAnimation:decayAnimation forKey:@"decelerate"];
             }
+            
+            if (self.view.frame.origin.y > kYOffsetToTriggerDismissal) {
+                [self dismissViewControllerAnimated:YES completion:nil];
+            } else if (self.view.frame.origin.y > 0) {
+                [self pop_removeAllAnimations];
+                
+                CGPoint target = CGPointMake(0, 0);
+                
+                POPSpringAnimation *springAnimation = [POPSpringAnimation animation];
+                springAnimation.property = [self frameOriginProperty];
+                springAnimation.velocity = [NSValue valueWithCGPoint:CGPointMake(0, 50.0)];
+                springAnimation.toValue = [NSValue valueWithCGPoint:target];
+                springAnimation.springBounciness = 1;
+                springAnimation.springSpeed = 50.0;
+                
+                [self pop_addAnimation:springAnimation forKey:@"bounce"];
+            }
         }
             break;
             
@@ -219,6 +238,30 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     }
     
 }
+
+- (POPAnimatableProperty *)frameOriginProperty
+{
+    POPAnimatableProperty *prop = [POPAnimatableProperty propertyWithName:@"com.bsuvorov.frame.origin" initializer:^(POPMutableAnimatableProperty *prop) {
+        // read value
+        prop.readBlock = ^(id obj, CGFloat values[]) {
+            values[0] = [[obj view] frame].origin.x;
+            values[1] = [[obj view] frame].origin.y;
+        };
+        // write value
+        prop.writeBlock = ^(id obj, const CGFloat values[]) {
+            CGRect tempFrame = [[obj view] frame];
+            tempFrame.origin.x = values[0];
+            tempFrame.origin.y = values[1];
+            tempFrame.size.height += values[1];
+            [[obj view] setFrame:tempFrame];
+        };
+        // dynamics threshold
+        prop.threshold = 0.01;
+    }];
+    
+    return prop;
+}
+
 
 - (POPAnimatableProperty *)boundsOriginProperty
 {
