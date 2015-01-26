@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     
 };
 
-@interface EmbeddedAppleTableViewController () <UITableViewDataSource>
+@interface EmbeddedAppleTableViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic) ScrollViewPanState panState;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) UIPanGestureRecognizer *panGesture;
@@ -34,9 +34,10 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 
     self.tableView = [[UITableView alloc] init];
     self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     [self.view addSubview:self.tableView];
     
-    self.tableView.userInteractionEnabled = NO;
+    self.tableView.scrollEnabled = NO;
     
     self.data = [NSArray arrayWithObjects:@"George", @"Aniket", @"Peter", @"Diana", @"Millani", @"Angela", @"Ram", @"Piece", @"Swiss", @"Todododo", @"Clement", @"Shot Screen",
                  @"George", @"Aniket", @"Peter", @"Diana", @"Millani", @"Angela", @"Ram", @"Piece", @"Swiss", @"Todododo", @"Clement", @"Shot Screen",
@@ -46,6 +47,10 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     [self.view addGestureRecognizer:panGestureRecognizer];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Selected indexPath =%@", indexPath);
+}
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
