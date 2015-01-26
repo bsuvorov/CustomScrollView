@@ -10,6 +10,7 @@
 
 #import "CustomScrollPopViewController.h"
 #import "EmbeddedAppleTableViewController.h"
+#import "DummyToolbarViewController.h"
 
 @interface SampleSelectorTableViewController ()
 
@@ -22,7 +23,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.sampleClassNames = [NSArray arrayWithObjects:[EmbeddedAppleTableViewController class], [CustomScrollPopViewController class], nil];
+    self.sampleClassNames = [NSArray arrayWithObjects:[EmbeddedAppleTableViewController class],
+                                                    [CustomScrollPopViewController class],
+                                                    [DummyToolbarViewController class],
+                                                    nil];
 }
 
 
