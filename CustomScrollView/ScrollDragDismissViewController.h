@@ -16,6 +16,5 @@
 
 @interface ScrollDragDismissViewController : UIViewController
 
-- (instancetype)initWithContentViewController:(UIViewController <ScrollDragDismissProtocol> *)contentVC;
-
+- (instancetype)initWithContentViewController:(UIViewController <ScrollDragDismissProtocol> *)contentVC isPointingToBottom:(BOOL)isPointingDown;
 @end

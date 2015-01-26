@@ -28,19 +28,21 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 @property (nonatomic) UIViewController <ScrollDragDismissProtocol> *contentVC;
 @property (nonatomic) CGRect originalFrame;
 @property (nonatomic) CGRect originalContentBounds;
+@property (nonatomic) BOOL isPointingDown;
 @end
 
 @implementation ScrollDragDismissViewController
 
-- (instancetype)initWithContentViewController:(UIViewController <ScrollDragDismissProtocol> *)contentVC
+- (instancetype)initWithContentViewController:(UIViewController <ScrollDragDismissProtocol> *)contentVC isPointingToBottom:(BOOL)isPointingDown
 {
     self = [super init];
     if (self) {
         self.contentVC = contentVC;
+        self.isPointingDown = isPointingDown;
     }
     return self;
+    
 }
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -75,17 +77,22 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 
 - (void)moveContentViewFrameWithTranslation:(CGPoint)translation
 {
-    CGRect frame = self.view.frame;
-    frame.origin.y += translation.y;
-    frame.size.height -= translation.y;
-    self.view.frame = frame;
+    if (self.isPointingDown) {
+        CGRect frame = self.view.frame;
+        frame.origin.y += translation.y;
+        frame.size.height -= translation.y;
+        self.view.frame = frame;
+    } else {
+        CGRect frame = self.view.frame;
+        frame.size.height += translation.y;
+        self.view.frame = frame;
+    }
 }
 
 - (void)scrollViewWithTranslation:(CGPoint)translation
 {
     CGRect bounds = self.contentVC.view.bounds;
     bounds.origin.y -= translation.y;
-    self.contentVC.view.bounds = bounds;
     [self setContentViewBounds:bounds];
 }
 
@@ -121,14 +128,68 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 
 - (CGFloat)deltaFromOriginalYOrigin
 {
-    return (self.view.frame.origin.y - self.originalFrame.origin.y
-            );
+    return (self.view.frame.origin.y - self.originalFrame.origin.y);
 }
 
-- (ScrollViewPanState)nextStateForState:(ScrollViewPanState)oldState translation:(CGPoint)translation
+- (ScrollViewPanState)nextStateWhenPointingUpForState:(ScrollViewPanState)oldState translation:(CGPoint)translation
 {
+    CGSize contentSize = [self.contentVC contentSize];
+    CGRect contentBounds = self.contentVC.view.bounds;
+
+    BOOL didHitBottom = contentBounds.origin.y + contentBounds.size.height - translation.y > contentSize.height;
+    
+    CGFloat yTranstlation = translation.y;
+    
     if (oldState == ScrollViewPanStateInactive) {
-        if (translation.y <= 0) {
+        if (yTranstlation > 0) {
+            return ScrollViewPanStateScrollsUp;
+        } else if (didHitBottom) {
+            return ScrollViewPanStateContentPansUp;
+        } else {
+            return  ScrollViewPanStateScrollsDown;
+        }
+    } else if (oldState == ScrollViewPanStateScrollsDown) {
+        if (yTranstlation > 0) {
+            return ScrollViewPanStateScrollsUp;
+        } else if (didHitBottom) {
+            return ScrollViewPanStateContentPansUp;
+        } else {
+            return ScrollViewPanStateScrollsDown;
+        }
+    } else if (oldState == ScrollViewPanStateScrollsUp) {
+        if (yTranstlation > 0) {
+            return ScrollViewPanStateScrollsUp;
+        } else {
+            return ScrollViewPanStateScrollsDown;
+        }
+    } else if (oldState == ScrollViewPanStateContentPansDown) {
+        if (yTranstlation < 0) {
+            if (didHitBottom) {
+                return ScrollViewPanStateScrollsDown;
+            } else {
+                return ScrollViewPanStateContentPansDown;
+            }
+        } else {
+            return ScrollViewPanStateContentPansUp;
+        }
+    } else if (oldState == ScrollViewPanStateContentPansUp) {
+        if (yTranstlation < 0) {
+            return ScrollViewPanStateContentPansUp;
+        } else {
+            return ScrollViewPanStateContentPansDown;
+        }
+    }
+    
+    return ScrollViewPanStateInactive;
+}
+
+
+- (ScrollViewPanState)nextStateWhenPointingDownForState:(ScrollViewPanState)oldState translation:(CGPoint)translation
+{
+    CGFloat yTranstlation = translation.y;
+    
+    if (oldState == ScrollViewPanStateInactive) {
+        if (yTranstlation <= 0) {
             return ScrollViewPanStateScrollsDown;
         } else if (self.contentVC.view.bounds.origin.y <= 0) {
             return ScrollViewPanStateContentPansDown;
@@ -136,28 +197,28 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
             return ScrollViewPanStateScrollsUp;
         }
     } else if (oldState == ScrollViewPanStateScrollsDown) {
-        if (translation.y <= 0) {
+        if (yTranstlation <= 0) {
             return ScrollViewPanStateScrollsDown;
         } else {
             return ScrollViewPanStateScrollsUp;
         }
     } else if (oldState == ScrollViewPanStateScrollsUp) {
-        if (translation.y <= 0) {
+        if (yTranstlation <= 0) {
             return ScrollViewPanStateScrollsDown;
-        } else if(self.contentVC.view.bounds.origin.y - translation.y < 0) {
+        } else if(self.contentVC.view.bounds.origin.y - yTranstlation < 0) {
             return ScrollViewPanStateContentPansDown;
         } else {
             return ScrollViewPanStateScrollsUp;
         }
     } else if (oldState == ScrollViewPanStateContentPansDown) {
-        if (translation.y < 0) {
+        if (yTranstlation < 0) {
             return ScrollViewPanStateContentPansUp;
         } else {
             return ScrollViewPanStateContentPansDown;
         }
     } else if (oldState == ScrollViewPanStateContentPansUp) {
-        if (translation.y < 0) {
-            if ([self deltaFromOriginalYOrigin] + translation.y < 0) {
+        if (yTranstlation < 0) {
+            if ([self deltaFromOriginalYOrigin] + yTranstlation < 0) {
                 return ScrollViewPanStateScrollsUp;
             } else {
                 return ScrollViewPanStateContentPansUp;
@@ -168,6 +229,16 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     }
     
     return ScrollViewPanStateInactive;
+    
+}
+
+- (ScrollViewPanState)nextStateForState:(ScrollViewPanState)oldState translation:(CGPoint)translation
+{
+    if (self.isPointingDown) {
+        return [self nextStateWhenPointingDownForState:oldState translation:translation];
+    } else {
+        return [self nextStateWhenPointingUpForState:oldState translation:translation];
+    }
 }
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)panGestureRecognizer
@@ -206,14 +277,16 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
                 decayAnimation.velocity = [NSValue valueWithCGPoint:velocity];
                 [self pop_addAnimation:decayAnimation forKey:@"decelerate"];
             }
+
+            CGFloat heightDelta = self.originalFrame.size.height - self.view.frame.size.height;
             
-            if ([self deltaFromOriginalYOrigin] > kYOffsetToTriggerDismissal) {
+            if (heightDelta > kYOffsetToTriggerDismissal) {
                 [self dismissVC];
-            } else if ([self deltaFromOriginalYOrigin] > 0) {
+            } else if (heightDelta > 0) {
                 [self pop_removeAllAnimations];
                 
                 CGPoint target = self.originalFrame.origin;
-
+                
                 POPSpringAnimation *springAnimation = [POPSpringAnimation animation];
                 springAnimation.property = [self frameOriginProperty];
                 springAnimation.velocity = [NSValue valueWithCGPoint:CGPointMake(0, 50.0)];

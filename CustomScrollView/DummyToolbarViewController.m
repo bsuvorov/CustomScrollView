@@ -29,17 +29,31 @@
 
     
     UIBarButtonItem *barButtonLeft = [[UIBarButtonItem alloc] initWithTitle:@"Image" style:UIBarButtonItemStylePlain target:self action:@selector(presentImageVC)];
+
+    UIBarButtonItem *barButtonCenter = [[UIBarButtonItem alloc] initWithTitle:@"iPad dissmiss" style:UIBarButtonItemStylePlain target:self action:@selector(presentiPadStyleDismiss)];
     
     UIBarButtonItem *barButtonRight = [[UIBarButtonItem alloc] initWithTitle:@"Long list" style:UIBarButtonItemStylePlain target:self action:@selector(presentScrollDragAndDismiss)];
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
-    self.toolbarItems = [NSArray arrayWithObjects:barButtonLeft, flexibleItem, barButtonRight, nil];
+    self.toolbarItems = [NSArray arrayWithObjects:barButtonLeft, flexibleItem, barButtonCenter, flexibleItem, barButtonRight, nil];
+}
+
+- (void)presentiPadStyleDismiss
+{
+    DummyTableViewController *dummyVC = [[DummyTableViewController alloc] init];
+    dummyVC.data = self.longList;
+    ScrollDragDismissViewController *sddVC = [[ScrollDragDismissViewController alloc] initWithContentViewController:dummyVC isPointingToBottom:NO];
+    
+    [self addChildViewController:sddVC];
+    [self.view addSubview:sddVC.view];
+    
+    sddVC.view.frame = CGRectMake(20,140,self.view.bounds.size.width-2*20,self.view.bounds.size.height-60-140);
 }
 
 - (void)presentImageVC
 {
     DummyImageViewController *dummyVC = [[DummyImageViewController alloc] init];
-    ScrollDragDismissViewController *sddVC = [[ScrollDragDismissViewController alloc] initWithContentViewController:dummyVC];
+    ScrollDragDismissViewController *sddVC = [[ScrollDragDismissViewController alloc] initWithContentViewController:dummyVC isPointingToBottom:YES];
     
     [self addChildViewController:sddVC];
     [self.view addSubview:sddVC.view];
@@ -51,7 +65,7 @@
 {
     DummyTableViewController *dummyVC = [[DummyTableViewController alloc] init];
     dummyVC.data = self.longList;
-    ScrollDragDismissViewController *sddVC = [[ScrollDragDismissViewController alloc] initWithContentViewController:dummyVC];
+    ScrollDragDismissViewController *sddVC = [[ScrollDragDismissViewController alloc] initWithContentViewController:dummyVC isPointingToBottom:YES  ];
     
     [self addChildViewController:sddVC];
     [self.view addSubview:sddVC.view];
