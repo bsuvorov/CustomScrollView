@@ -23,10 +23,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.sampleClassNames = [NSArray arrayWithObjects:[EmbeddedAppleTableViewController class],
-                                                    [CustomScrollPopViewController class],
-                                                    [DummyToolbarViewController class],
-                                                    nil];
+    self.sampleClassNames = [NSArray arrayWithObjects:
+                             [DummyToolbarViewController class],
+                             [EmbeddedAppleTableViewController class],
+                             [CustomScrollPopViewController class],
+                             nil];
 }
 
 

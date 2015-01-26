@@ -175,7 +175,6 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     switch (panGestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:
         {
-            NSLog(@"Gesture started!");
             [self pop_removeAnimationForKey:@"bounce"];
             [self pop_removeAnimationForKey:@"decelerate"];
         }
@@ -195,7 +194,6 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
             break;
         case UIGestureRecognizerStateEnded:
         {
-            NSLog(@"GESTURE ENDED!!!!!!!!!!!");
             self.panState = ScrollViewPanStateInactive;
             if (self.contentVC.view.bounds.origin.y != 0) {
                 CGPoint velocity = [panGestureRecognizer velocityInView:self.contentVC.view];
@@ -291,9 +289,6 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 - (void)setContentViewBounds:(CGRect)bounds
 {
     self.contentVC.view.bounds = bounds;
-    
-    NSLog(@"Settin bounds origin (%f, %f), width = %f, height = %f",
-          bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
     
     CGSize contentSize = [self.contentVC contentSize];
     
