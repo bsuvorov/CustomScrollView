@@ -26,6 +26,7 @@
 		70D673571A74AE16008799A2 /* EmbeddedAppleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D673561A74AE16008799A2 /* EmbeddedAppleTableViewController.m */; };
 		70DE37B41A75E6C7001DCD2F /* SampleSelectorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70DE37B31A75E6C7001DCD2F /* SampleSelectorTableViewController.m */; };
 		70DE37B71A75EF59001DCD2F /* DummyToolbarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70DE37B61A75EF59001DCD2F /* DummyToolbarViewController.m */; };
+		70DE37BD1A75FC4A001DCD2F /* ScrollDragDismissViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70DE37BC1A75FC4A001DCD2F /* ScrollDragDismissViewController.m */; };
 		F981C00E1914449600EF08E0 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = F981C00D1914449600EF08E0 /* Podfile */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,8 @@
 		70DE37B31A75E6C7001DCD2F /* SampleSelectorTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleSelectorTableViewController.m; sourceTree = "<group>"; };
 		70DE37B51A75EF59001DCD2F /* DummyToolbarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DummyToolbarViewController.h; sourceTree = "<group>"; };
 		70DE37B61A75EF59001DCD2F /* DummyToolbarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DummyToolbarViewController.m; sourceTree = "<group>"; };
+		70DE37BB1A75FC4A001DCD2F /* ScrollDragDismissViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollDragDismissViewController.h; sourceTree = "<group>"; };
+		70DE37BC1A75FC4A001DCD2F /* ScrollDragDismissViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollDragDismissViewController.m; sourceTree = "<group>"; };
 		CD3C33B803EAB8E8D71691F2 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F981C00D1914449600EF08E0 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
@@ -156,6 +159,8 @@
 				70D673561A74AE16008799A2 /* EmbeddedAppleTableViewController.m */,
 				70DE37B51A75EF59001DCD2F /* DummyToolbarViewController.h */,
 				70DE37B61A75EF59001DCD2F /* DummyToolbarViewController.m */,
+				70DE37BB1A75FC4A001DCD2F /* ScrollDragDismissViewController.h */,
+				70DE37BC1A75FC4A001DCD2F /* ScrollDragDismissViewController.m */,
 				708C79D11A7344B6001409DE /* ContainerViewController.h */,
 				708C79D21A7344B6001409DE /* ContainerViewController.m */,
 				5D3A783F18FF1912006CCAB3 /* Images.xcassets */,
@@ -330,6 +335,7 @@
 			files = (
 				5D3A783E18FF1912006CCAB3 /* CustomScrollPopViewController.m in Sources */,
 				70DE37B41A75E6C7001DCD2F /* SampleSelectorTableViewController.m in Sources */,
+				70DE37BD1A75FC4A001DCD2F /* ScrollDragDismissViewController.m in Sources */,
 				5D3A783818FF1912006CCAB3 /* AppDelegate.m in Sources */,
 				70D673571A74AE16008799A2 /* EmbeddedAppleTableViewController.m in Sources */,
 				5D3A785E18FF1923006CCAB3 /* CustomScrollView.m in Sources */,
