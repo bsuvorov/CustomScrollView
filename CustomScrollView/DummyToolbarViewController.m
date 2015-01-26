@@ -13,6 +13,8 @@
 @property (nonatomic) NSArray *data;
 @end
 
+@interface DummyImageViewController : UIViewController <ScrollDragDismissProtocol>
+@end
 
 @interface DummyToolbarViewController ()
 @property (nonatomic) NSArray *longList;
@@ -26,13 +28,24 @@
     self.longList = [NSArray arrayWithObjects:@"George", @"Peter", @"Michael", @"Siong", @"Mallory", @"Eric", @"Cheryl", @"Leslie", @"Millani", @"Angela", @"Ram", @"Piece", @"Swiss", @"Todododo", @"Clement", @"Shot Screen", @"Screen shot", @"Albany", @"What did we learn", @"Not to do it again", @"But what did we do?", nil];
 
     
-    UIBarButtonItem *barButtonRight = [[UIBarButtonItem alloc] initWithTitle:@"Long" style:UIBarButtonItemStylePlain target:self action:@selector(presentScrollDragAndDismiss)];
+    UIBarButtonItem *barButtonLeft = [[UIBarButtonItem alloc] initWithTitle:@"Image" style:UIBarButtonItemStylePlain target:self action:@selector(presentImageVC)];
+    
+    UIBarButtonItem *barButtonRight = [[UIBarButtonItem alloc] initWithTitle:@"Long list" style:UIBarButtonItemStylePlain target:self action:@selector(presentScrollDragAndDismiss)];
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
-    self.toolbarItems = [NSArray arrayWithObjects:flexibleItem, barButtonRight, nil];
+    self.toolbarItems = [NSArray arrayWithObjects:barButtonLeft, flexibleItem, barButtonRight, nil];
 }
 
-
+- (void)presentImageVC
+{
+    DummyImageViewController *dummyVC = [[DummyImageViewController alloc] init];
+    ScrollDragDismissViewController *sddVC = [[ScrollDragDismissViewController alloc] initWithContentViewController:dummyVC];
+    
+    [self addChildViewController:sddVC];
+    [self.view addSubview:sddVC.view];
+    
+    sddVC.view.frame = CGRectMake(20,140,self.view.bounds.size.width-2*20,self.view.bounds.size.height-60-140);
+}
 
 - (void)presentScrollDragAndDismiss
 {
@@ -44,6 +57,37 @@
     [self.view addSubview:sddVC.view];
     
     sddVC.view.frame = CGRectMake(20,140,self.view.bounds.size.width-2*20,self.view.bounds.size.height-60-140);
+}
+
+@end
+
+
+@implementation DummyImageViewController
+- (void)setScrollEnabled:(BOOL)scrollEnabled
+{
+    // Just a placeholder
+}
+
+- (CGSize)contentSize
+{
+    return CGSizeMake(200, 130);
+}
+
+
+- (instancetype)init
+{
+    self = [super init];
+
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"test.jpg"]];
+    imgView.contentMode = UIViewContentModeTopLeft;
+    imgView.clipsToBounds = YES;
+    self.view = imgView;
+
+    
+    CGSize size = [self contentSize];
+    self.view.frame = CGRectMake(0, 0, size.width, size.height);
+
+    return self;
 }
 
 @end
