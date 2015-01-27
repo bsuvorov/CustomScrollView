@@ -8,13 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol ScrollDragDismissProtocol <NSObject>
-- (void)setScrollEnabled:(BOOL)scrollEnabled;
-- (CGSize)contentSize;
-@end
-
-
 @interface ScrollDragDismissViewController : UIViewController
 
-- (instancetype)initWithContentViewController:(UIViewController <ScrollDragDismissProtocol> *)contentVC isPointingToBottom:(BOOL)isPointingDown;
+- (instancetype)initWithContentViewController:(UIViewController *)contentVC isPointingToBottom:(BOOL)isPointingDown;
 @end

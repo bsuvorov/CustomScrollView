@@ -9,11 +9,11 @@
 #import "DummyToolbarViewController.h"
 #import "ScrollDragDismissViewController.h"
 
-@interface DummyTableViewController : UITableViewController <ScrollDragDismissProtocol>
+@interface DummyTableViewController : UITableViewController
 @property (nonatomic) NSArray *data;
 @end
 
-@interface DummyImageViewController : UIViewController <ScrollDragDismissProtocol>
+@interface DummyImageViewController : UIViewController
 @end
 
 @interface DummyToolbarViewController ()
@@ -77,17 +77,6 @@
 
 
 @implementation DummyImageViewController
-- (void)setScrollEnabled:(BOOL)scrollEnabled
-{
-    // Just a placeholder
-}
-
-- (CGSize)contentSize
-{
-    return CGSizeMake(200, 130);
-}
-
-
 - (instancetype)init
 {
     self = [super init];
@@ -98,7 +87,7 @@
     self.view = imgView;
 
     
-    CGSize size = [self contentSize];
+    CGSize size = CGSizeMake(200, 130);
     self.view.frame = CGRectMake(0, 0, size.width, size.height);
 
     return self;
@@ -108,16 +97,6 @@
 
 
 @implementation DummyTableViewController
-
-- (void)setScrollEnabled:(BOOL)scrollEnabled
-{
-    self.tableView.scrollEnabled = scrollEnabled;
-}
-
-- (CGSize)contentSize
-{
-    return self.tableView.contentSize;
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSLog(@"Count = %ld",  (long)self.data.count);

@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 @interface ScrollDragDismissViewController ()
 @property (nonatomic) ScrollViewPanState panState;
 @property (nonatomic) UIPanGestureRecognizer *panGesture;
-@property (nonatomic) UIViewController <ScrollDragDismissProtocol> *contentVC;
+@property (nonatomic) UIViewController  *contentVC;
 @property (nonatomic) CGRect originalFrame;
 @property (nonatomic) CGRect originalContentBounds;
 @property (nonatomic) BOOL isPointingDown;
@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 
 @implementation ScrollDragDismissViewController
 
-- (instancetype)initWithContentViewController:(UIViewController <ScrollDragDismissProtocol> *)contentVC isPointingToBottom:(BOOL)isPointingDown
+- (instancetype)initWithContentViewController:(UIViewController *)contentVC isPointingToBottom:(BOOL)isPointingDown
 {
     self = [super init];
     if (self) {
@@ -51,12 +51,16 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 
     [self.view addSubview:self.contentVC.view];
 
-    [self.contentVC setScrollEnabled:NO];
+    if ([self.contentVC.view respondsToSelector:@selector(setScrollEnabled:)]) {
+        id view = self.contentVC.view;
+        [view setScrollEnabled:NO];
+    }
     
     UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     [self.view addGestureRecognizer:panGestureRecognizer];
 }
 
+// ?
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -131,9 +135,19 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
     return (self.view.frame.origin.y - self.originalFrame.origin.y);
 }
 
+- (CGSize)contentViewSize
+{
+    id view = self.contentVC.view;
+    if ([view respondsToSelector:@selector(contentSize)]) {
+        return [view contentSize];
+    } else {
+        return self.contentVC.view.bounds.size;
+    }
+}
+
 - (ScrollViewPanState)nextStateWhenPointingUpForState:(ScrollViewPanState)oldState translation:(CGPoint)translation
 {
-    CGSize contentSize = [self.contentVC contentSize];
+    CGSize contentSize = [self contentViewSize];
     CGRect contentBounds = self.contentVC.view.bounds;
 
     BOOL didHitBottom = contentBounds.origin.y + contentBounds.size.height - translation.y > contentSize.height;
@@ -363,7 +377,7 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
 {
     self.contentVC.view.bounds = bounds;
     
-    CGSize contentSize = [self.contentVC contentSize];
+    CGSize contentSize = [self contentViewSize];
     
     BOOL outsideBoundsMinimum = bounds.origin.x < 0.0 || bounds.origin.y < 0.0;
     BOOL outsideBoundsMaximum = bounds.origin.x > contentSize.width - bounds.size.width ||
