@@ -163,8 +163,8 @@ typedef NS_ENUM(NSInteger, ScrollViewPanState) {
             return ScrollViewPanStateScrollsDown;
         }
     } else if (oldState == ScrollViewPanStateContentPansDown) {
-        if (yTranstlation < 0) {
-            if (didHitBottom) {
+        if (yTranstlation >= 0) {
+            if (self.view.frame.size.height + translation.y > self.originalFrame.size.height) {
                 return ScrollViewPanStateScrollsDown;
             } else {
                 return ScrollViewPanStateContentPansDown;
